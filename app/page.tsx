@@ -243,9 +243,9 @@ export default function ChatPage() {
               <div className="slide-right ml-auto max-w-[85%] sm:max-w-[75%] bg-zinc-800/90 border-r-4 border-red-600 rounded-l-lg rounded-tr-lg p-3.5 shadow-[0_4px_15px_rgba(0,0,0,0.5)] border border-zinc-700/50 relative">
                 <div className="flex items-center justify-between gap-6 mb-1.5">
                   <span className="text-[9px] text-zinc-400 uppercase tracking-widest font-mono font-bold">
-                    Dragon of Dojima
+                    Saku_NyaNya
                   </span>
-                  <span className="text-xs text-red-500">🐉</span>
+                  <span className="text-xs text-red-500">👤</span>
                 </div>
                 <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-100 font-sans font-medium">
                   {msg.parts[0]}
@@ -263,7 +263,7 @@ export default function ChatPage() {
                   <span className="text-[10px] text-amber-400 uppercase tracking-widest font-mono font-bold">
                     Majima Goro (真島 吾朗)
                   </span>
-                  <span className="text-xs text-amber-400">🐍</span>
+                  <span className="text-xs text-amber-400">🐕</span>
                 </div>
                 <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-200 font-mono">
                   {msg.parts[0]}
