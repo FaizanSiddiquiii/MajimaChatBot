@@ -65,7 +65,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className={`flex flex-col h-screen bg-black text-zinc-100 p-4 relative overflow-hidden selection:bg-pink-600 selection:text-white ${spaceGrotesk.className}`}>
+    <div className={`flex flex-col h-[100dvh] bg-black text-zinc-100 p-3 sm:p-4 relative overflow-hidden selection:bg-pink-600 selection:text-white ${spaceGrotesk.className}`}>
       
       {/* Custom Keyframe and CSS Animations */}
       <style dangerouslySetInnerHTML={{ __html: `
@@ -159,7 +159,7 @@ export default function ChatPage() {
       <div className="pointer-events-none absolute inset-x-0 h-1 z-50 bg-pink-500/10 custom-scanline opacity-30"></div>
 
       {/* Header */}
-      <div className="border-b-2 border-red-700/60 pb-4 mb-4 flex justify-between items-end z-10 bg-black/40 backdrop-blur-md">
+      <div className="border-b-2 border-red-700/60 pb-3 sm:pb-4 mb-3 sm:mb-4 flex justify-between items-end z-10 bg-black/40 backdrop-blur-md shrink-0">
         <div>
           <div className="flex items-baseline gap-2">
             <span className="text-[10px] text-pink-500 border border-pink-500/50 px-1.5 py-0.5 rounded font-mono uppercase tracking-widest animate-pulse">
@@ -170,17 +170,17 @@ export default function ChatPage() {
             </span>
           </div>
           
-          <h1 className={`text-4xl sm:text-5xl font-normal tracking-wide uppercase flex items-center gap-3 mt-1.5 ${bebas.className}`}>
+          <h1 className={`text-3xl sm:text-5xl font-normal tracking-wide uppercase flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 ${bebas.className}`}>
             <span className="text-pink-500 neon-pink">Goro Majima</span>
             <span className="text-amber-400 neon-gold">Terminal</span>
           </h1>
 
-          <div className="text-xs text-zinc-400 mt-1.5 flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
+          <div className="text-xs text-zinc-400 mt-1.5 flex items-start gap-2">
+            <span className="relative flex h-2 w-2 mt-1 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
             </span>
-            <span className="font-mono tracking-wider text-zinc-300 text-[11px] sm:text-xs">
+            <span className="font-mono tracking-wider text-zinc-300 text-[10px] sm:text-xs leading-normal">
               STATUS: PATROLLING KAMUROCHO (SEARCHING FOR KIRYU-CHAN...)
             </span>
           </div>
@@ -197,7 +197,7 @@ export default function ChatPage() {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto space-y-5 mb-4 p-4 border border-zinc-800/80 rounded bg-zinc-950/40 backdrop-blur-sm shadow-inner custom-scrollbar">
+      <div className="flex-1 overflow-y-auto space-y-4 sm:space-y-5 mb-3 sm:mb-4 p-3 sm:p-4 border border-zinc-800/80 rounded bg-zinc-950/40 backdrop-blur-sm shadow-inner custom-scrollbar">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center p-6 space-y-6 max-w-md mx-auto my-auto">
             {/* Stylized Neon Hannya Symbol or Mask Card */}
@@ -240,7 +240,7 @@ export default function ChatPage() {
           <div key={idx} className="w-full flex">
             {msg.role === 'user' ? (
               /* User Bubble (Kiryu Suit Theme: Dark Charcoal/Grey with Maroon Accent) */
-              <div className="slide-right ml-auto max-w-[85%] sm:max-w-[75%] bg-zinc-800/90 border-r-4 border-red-600 rounded-l-lg rounded-tr-lg p-3.5 shadow-[0_4px_15px_rgba(0,0,0,0.5)] border border-zinc-700/50 relative">
+              <div className="slide-right ml-auto max-w-[90%] sm:max-w-[75%] bg-zinc-800/90 border-r-4 border-red-600 rounded-l-lg rounded-tr-lg p-3 sm:p-3.5 shadow-[0_4px_15px_rgba(0,0,0,0.5)] border border-zinc-700/50 relative">
                 <div className="flex items-center justify-between gap-6 mb-1.5">
                   <span className="text-[9px] text-zinc-400 uppercase tracking-widest font-mono font-bold">
                     Saku_NyaNya
@@ -253,7 +253,7 @@ export default function ChatPage() {
               </div>
             ) : (
               /* Majima Bubble (Snakeskin Gold/Yellow, Chaotic Tilt & Offset) */
-              <div className="slide-left mr-auto max-w-[85%] sm:max-w-[75%] bg-neutral-950 border-2 border-amber-400 rounded-r-lg rounded-bl-lg p-4 shadow-[0_0_20px_rgba(245,158,11,0.15)] relative transform -rotate-[0.5deg]">
+              <div className="slide-left mr-auto max-w-[90%] sm:max-w-[75%] bg-neutral-950 border-2 border-amber-400 rounded-r-lg rounded-bl-lg p-3 sm:p-4 shadow-[0_0_20px_rgba(245,158,11,0.15)] relative transform -rotate-[0.5deg]">
                 {/* Asymmetric Label */}
                 <div className="absolute -top-3 -left-2 bg-amber-400 text-black text-[9px] font-bold px-2 py-0.5 rounded shadow-md uppercase tracking-wider font-mono">
                   Mad Dog
@@ -274,7 +274,7 @@ export default function ChatPage() {
         ))}
         
         {loading && (
-          <div className="slide-left mr-auto max-w-[80%] bg-neutral-950 border-2 border-dashed border-red-500/50 rounded-r-xl rounded-bl-xl p-3.5 shadow-[0_0_15px_rgba(220,38,38,0.15)] flex items-center gap-3 transform -rotate-[0.5deg] relative">
+          <div className="slide-left mr-auto max-w-[90%] sm:max-w-[80%] bg-neutral-950 border-2 border-dashed border-red-500/50 rounded-r-xl rounded-bl-xl p-3 sm:p-3.5 shadow-[0_0_15px_rgba(220,38,38,0.15)] flex items-center gap-3 transform -rotate-[0.5deg] relative">
             <div className="absolute -top-3 -left-2 bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow-md uppercase tracking-wider font-mono">
               Chuckle
             </div>
@@ -292,7 +292,7 @@ export default function ChatPage() {
       </div>
 
       {/* Input Form */}
-      <div className="relative flex gap-3 p-2 bg-black/80 border-t-2 border-red-800/40 z-10 backdrop-blur-md rounded-t-lg">
+      <div className="relative flex gap-2 sm:gap-3 p-2 bg-black/80 border-t-2 border-red-800/40 z-10 backdrop-blur-md rounded-t-lg shrink-0">
         {/* Eye patch design decoration */}
         <div className="hidden sm:flex items-center justify-center w-12 bg-neutral-900 border border-zinc-800 rounded-lg text-lg text-zinc-500 select-none shadow-inner">
           👁️
@@ -304,19 +304,36 @@ export default function ChatPage() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           placeholder="Spit it out, Kiryu-chan!..."
-          className="flex-1 bg-zinc-900/90 border-2 border-zinc-800 focus:border-pink-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500/20 text-zinc-100 placeholder-zinc-600 transition-all duration-300 shadow-inner text-sm font-mono tracking-wide"
+          className="flex-1 bg-zinc-900/90 border-2 border-zinc-800 focus:border-pink-500 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 focus:outline-none focus:ring-2 focus:ring-pink-500/20 text-zinc-100 placeholder-zinc-600 transition-all duration-300 shadow-inner text-sm font-mono tracking-wide"
           disabled={loading}
         />
         
         <button 
           onClick={handleSend} 
           disabled={loading}
-          className={`bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white px-8 py-3 rounded-lg font-normal tracking-widest transition-all duration-200 active:scale-95 disabled:opacity-40 disabled:scale-100 hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] flex items-center gap-2 uppercase text-2xl cursor-pointer ${bebas.className}`}
+          className={`bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-lg font-normal tracking-widest transition-all duration-200 active:scale-95 disabled:opacity-40 disabled:scale-100 hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] flex items-center gap-2 uppercase text-xl sm:text-2xl cursor-pointer ${bebas.className}`}
         >
           <span>OI!</span>
           <span className="text-lg">👊</span>
         </button>
       </div>
+
+      {/* Footer / Credits */}
+      <footer className="text-center py-2 text-[11px] font-mono text-zinc-600 z-10 mt-1 select-none flex items-center justify-center gap-1.5 shrink-0">
+        <span>© {new Date().getFullYear()}</span>
+        <span>•</span>
+        <span>
+          Made by{' '}
+          <a
+            href="https://x.com/yamazakiiish"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-zinc-500 hover:text-pink-500 hover:brightness-125 underline decoration-pink-500/30 hover:decoration-pink-500 transition-all"
+          >
+            Yama ch.
+          </a>
+        </span>
+      </footer>
     </div>
   );
 }
