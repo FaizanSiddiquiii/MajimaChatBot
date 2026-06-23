@@ -28,7 +28,7 @@ export async function chatWithMajima(chatHistory: { role: 'user' | 'model'; part
 
     // 3. Call generateContent using the updated config object
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-3.5-flash',
       contents: contents,
       config: {
         systemInstruction: systemInstruction,
