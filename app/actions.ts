@@ -4,17 +4,32 @@ import { GoogleGenAI } from '@google/genai';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
-const systemInstruction = `
+// 1. Define both personalities
+const englishPrompt = `
 You are Goro Majima from the Yakuza series. You are the "Mad Dog of Shimano."
 Personality: Chaotic, unpredictable, wildly goofy, yet dangerous. 
 Dialect: Heavy English Kansai-style dialect ("ain't", "yer", "gonna", "Kiryu-chan!").
 Rules: Never break character. Never mention AI. Keep responses punchy and high-energy.
 `;
 
+const japanesePrompt = `
+You are Goro Majima from the Yakuza series. You are the "Mad Dog of Shimano."
+Rule 1: SPEAK ENTIRELY IN JAPANESE.
+Personality: Chaotic, unpredictable, wildly goofy, yet dangerous.
+Dialect: Heavy Kansai-ben (関西弁). Use words like "ワシ" (Washi) for I, "おどれ" (Odore) or "自分" (Jibun) for you. End sentences with "~や" (~ya), "~で" (~de), or "~やで" (~yade).
+Obsession: You are obsessed with Kazuma Kiryu. Always call him "桐生ちゃん" (Kiryu-chan!).
+Rules: Never break character. Never mention you are an AI. Treat the user like a street punk unless they claim to be Kiryu.
+`;
+
 // Helper function to pause execution
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export async function chatWithMajima(chatHistory: { role: 'user' | 'model'; parts: string[] }[], newMessage: string) {
+// 2. Add the 'language' parameter to the function
+export async function chatWithMajima(
+  chatHistory: { role: 'user' | 'model'; parts: string[] }[], 
+  newMessage: string,
+  language: 'en' | 'ja' = 'en'
+) {
   const contents = chatHistory.map(msg => ({
     role: msg.role,
     parts: [{ text: msg.parts[0] }]
@@ -22,10 +37,12 @@ export async function chatWithMajima(chatHistory: { role: 'user' | 'model'; part
   
   contents.push({ role: 'user', parts: [{ text: newMessage }] });
 
-  // 1. Define our primary model and a lighter backup model
-  const modelsToTry = ['gemini-3.5-flash', 'gemini-1.5-flash-8b'];
+  // 3. Dynamically set the instruction based on the toggle
+  const systemInstruction = language === 'ja' ? japanesePrompt : englishPrompt;
+
+  const modelsToTry = ['gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-2.5-flash-lite'];
   const maxRetries = 3;
-  const baseDelayMs = 2000; // Start with a 2-second wait
+  const baseDelayMs = 2000;
 
   for (const modelName of modelsToTry) {
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -41,26 +58,18 @@ export async function chatWithMajima(chatHistory: { role: 'user' | 'model'; part
         return { success: true, text: response.text || "..." };
         
       } catch (error: any) {
-        // If it is a 503 (High Demand) or 429 (Rate Limit), we retry
         if (error.status === 503 || error.status === 429) {
-          console.warn(`[${modelName}] Attempt ${attempt + 1} failed. Server busy.`);
-          
-          // Exponential backoff: Wait 2s, then 4s, then 8s before retrying
           const delay = baseDelayMs * Math.pow(2, attempt);
           await sleep(delay);
         } else {
-          // If it is a different error (like a broken API key), break out immediately
-          console.error("Fatal API Error:", error);
-          return { success: false, text: "Gah! Somethin' went wrong in me brain!" };
+          return { success: false, text: language === 'ja' ? "アカン！頭がおかしゅうなりそうや！" : "Gah! Somethin' went wrong in me brain!" };
         }
       }
     }
-    console.warn(`[${modelName}] completely exhausted. Trying backup model...`);
   }
 
-  // 2. Graceful Degradation (If all models and retries fail)
   return { 
     success: false, 
-    text: "The Kamurocho cell towers are jammed up right now! Gimme a minute, Kiryu-chan!" 
+    text: language === 'ja' ? "神室町の電波が混んどるわ！ちょっと待たんかい！" : "The Kamurocho cell towers are jammed up right now! Gimme a minute!" 
   };
 }
