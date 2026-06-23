@@ -24,6 +24,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [language, setLanguage] = useState<'en' | 'ja'>('en');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -45,8 +46,8 @@ export default function ChatPage() {
     setLoading(true);
 
     try {
-      // Call the server action with the history AND the new input
-      const response = await chatWithMajima(messages, input);
+      // Call the server action with the history AND the new input AND language
+      const response = await chatWithMajima(messages, input, language);
 
       if (response.success && response.text) {
         setMessages([...updatedHistory, { role: 'model', parts: [response.text] }]);
@@ -62,6 +63,24 @@ export default function ChatPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Localized texts based on current language
+  const texts = {
+    status: language === 'en' ? 'STATUS: PATROLLING KAMUROCHO' : 'ステータス: 神室町巡回中 (桐生ちゃん捜索中...)',
+    greeting: language === 'en' ? 'Oi, Kiryu-chan!' : 'おい、桐生ちゃん！',
+    description: language === 'en' 
+      ? "The streets of Kamurocho are crawlin' with punks, but Majima is lookin' for a real fight. Say somethin' to wake the Mad Dog!"
+      : "神室町の通りはチンピラだらけやが、真島は本気の喧嘩を待っとるで。狂犬を起こすような言葉をかけてえな！",
+    suggestions: language === 'en'
+      ? ['Kiryu-chan!', 'Fight me!', 'Who are you?', 'Where is the cabaret?']
+      : ['桐生ちゃん！', '勝負や！', '自分、誰や？', 'キャバクラはどこや？'],
+    loadingText: language === 'en'
+      ? 'MAJIMA IS UNSHEATHING HIS DAGGER... 🔪'
+      : '真島がドスを抜いとるでぇ... 🔪',
+    placeholder: language === 'en'
+      ? 'Spit it out, Kiryu-chan!...'
+      : '吐き出さんかい、桐生ちゃん！...',
   };
 
   return (
@@ -196,23 +215,43 @@ export default function ChatPage() {
             </h1>
 
             <div className="text-[10px] text-zinc-400 mt-1 flex items-center gap-2">
-              <span className="relative flex h-2 w-2 shrink-0">
+              <span className="relative flex h-2 w-2 mt-1 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
               </span>
               <span className="font-mono tracking-wider text-zinc-300 uppercase leading-none">
-                STATUS: PATROLLING KAMUROCHO
+                {texts.status}
               </span>
             </div>
           </div>
 
-          <div className="text-right hidden sm:block">
-            <p className={`text-2xl text-red-600 font-normal leading-none tracking-widest ${bebas.className}`}>
-              嶋野の狂犬
-            </p>
-            <p className="text-[9px] text-zinc-500 font-mono tracking-widest uppercase mt-1 select-none">
-              The Mad Dog of Shimano
-            </p>
+          <div className="flex flex-col items-end gap-2 shrink-0 z-20">
+            {/* Language Toggle Button (Neon Arcade / Embroidered style) */}
+            <button
+              onClick={() => setLanguage(prev => prev === 'en' ? 'ja' : 'en')}
+              className="text-[10px] sm:text-xs font-mono font-bold tracking-wider px-3 py-1.5 rounded bg-neutral-900 border border-amber-500/40 hover:border-amber-400 text-amber-400 hover:text-amber-300 hover:shadow-[0_0_12px_rgba(245,158,11,0.35)] transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md relative overflow-hidden select-none before:absolute before:inset-0 before:border-[1px] before:border-dashed before:border-amber-500/20"
+            >
+              {language === 'en' ? (
+                <>
+                  <span className="filter drop-shadow-[0_0_2px_rgba(245,158,11,0.5)]">🇯🇵</span>
+                  <span>JP (KANSAI-BEN)</span>
+                </>
+              ) : (
+                <>
+                  <span className="filter drop-shadow-[0_0_2px_rgba(245,158,11,0.5)]">🇺🇸</span>
+                  <span>EN (ENGLISH)</span>
+                </>
+              )}
+            </button>
+
+            <div className="text-right hidden sm:block">
+              <p className={`text-2xl text-red-600 font-normal leading-none tracking-widest ${bebas.className}`}>
+                嶋野の狂犬
+              </p>
+              <p className="text-[9px] text-zinc-500 font-mono tracking-widest uppercase mt-1 select-none">
+                The Mad Dog of Shimano
+              </p>
+            </div>
           </div>
         </div>
 
@@ -247,15 +286,15 @@ export default function ChatPage() {
               
               <div className="space-y-3">
                 <h3 className={`text-3xl font-normal text-amber-400 tracking-wider uppercase ${bebas.className}`}>
-                  Oi, Kiryu-chan!
+                  {texts.greeting}
                 </h3>
                 <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-mono">
-                  The streets of Kamurocho are crawlin' with punks, but Majima is lookin' for a real fight. Say somethin' to wake the Mad Dog!
+                  {texts.description}
                 </p>
               </div>
               
               <div className="flex gap-2 flex-wrap justify-center pt-2 max-w-sm">
-                {['Kiryu-chan!', 'Fight me!', 'Who are you?', 'Where is the cabaret?'].map((suggestion) => (
+                {texts.suggestions.map((suggestion) => (
                   <button
                     key={suggestion}
                     onClick={() => {
@@ -321,7 +360,7 @@ export default function ChatPage() {
                 <div className="w-2.5 h-2.5 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
               <p className={`text-xs sm:text-sm text-red-500 uppercase tracking-widest animate-pulse font-bold ${bebas.className}`}>
-                MAJIMA IS UNSHEATHING HIS DAGGER... 🔪
+                {texts.loadingText}
               </p>
             </div>
           )}
@@ -345,7 +384,7 @@ export default function ChatPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Spit it out, Kiryu-chan!..."
+              placeholder={texts.placeholder}
               className="flex-1 bg-neutral-900/60 border border-zinc-800 focus:border-amber-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-amber-400/40 text-zinc-100 placeholder-zinc-600 transition-all duration-200 text-sm font-mono tracking-wide shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]"
               disabled={loading}
             />
